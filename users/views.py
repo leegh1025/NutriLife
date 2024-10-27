@@ -12,7 +12,7 @@ def user_info_goal(request):
     else:
         form = GoalForm()
     
-    return render(request, 'user_info_goal.html', {'form': form})
+    return render(request, 'User/user_info_goal.html', {'form': form})
 
 
 def user_info_count(request):
@@ -24,7 +24,7 @@ def user_info_count(request):
     else:
         form = MealChoiceForm()
     
-    return render(request, 'user_info_count.html', {'form': form})
+    return render(request, 'User/user_info_count.html', {'form': form})
 
 
 def user_info_basic(request):
@@ -37,7 +37,7 @@ def user_info_basic(request):
     else:
         form = BasicInfoForm()
     
-    return render(request, 'user_info_basic.html', {'form': form})
+    return render(request, 'User/user_info_basic.html', {'form': form})
 
 
 
@@ -75,4 +75,4 @@ def user_info_additional(request):
     else:
         form = AdditionalInfoForm()
 
-    return render(request, 'user_info_additional.html', {'form': form})
+    return render(request, 'User/user_info_additional.html', {'form': form})

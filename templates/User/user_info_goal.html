@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>목표 설정</title>
+</head>
+<body>
+    <header>
+        <h1>맞춤식단 설정</h1>
+    </header>
+
+    <main>
+        <p>OOO님이 식단으로 이루고 싶은 목표를 알려주세요</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" name="goal" value="lose_weight">뚜렷한 체중 감량 ↓</button>
+            <button type="submit" name="goal" value="gain_weight">뚜렷한 체중 증량 ↑</button>
+            <button type="submit" name="goal" value="maintain_weight_lose">적당한 체중 감량 또는 유지</button>
+            <button type="submit" name="goal" value="maintain_weight_gain">적당한 체중 증량 또는 유지</button>
+            <button type="submit" name="goal" value="healthy_diet">체중 변화보다는 건강한 식사 지향</button>
+        </form>
+    </main>
+</body>
+</html>
