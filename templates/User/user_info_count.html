@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맞춤식단 설정 - 끼니 선택</title>
+</head>
+<body>
+    <header>
+        <h1>맞춤식단 설정</h1>
+    </header>
+
+    <main>
+        <p>하루 중 추천받고 싶은 끼니를 골라주세요 (다중 선택 가능)</p>
+        <p>영양학적으로 하루 세끼를 섭취하는 것을 권장합니다</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <label>
+                <input type="checkbox" name="meal_choices" value="breakfast">
+                아침
+            </label>
+
+            <label>
+                <input type="checkbox" name="meal_choices" value="lunch">
+                점심
+            </label>
+
+            <label>
+                <input type="checkbox" name="meal_choices" value="dinner">
+                저녁
+            </label>
+
+            <button type="submit">다음</button>
+        </form>
+    </main>
+</body>
+</html>
