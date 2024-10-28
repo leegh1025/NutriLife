@@ -76,3 +76,26 @@ def user_info_additional(request):
         form = AdditionalInfoForm()
 
     return render(request, 'User/user_info_additional.html', {'form': form})
+
+
+def user_info_sleep_duration(request):
+    if request.method = "POST":
+        form = SleepDurationForm(request.POST)
+        if form.is_valid():
+            request.session['sleep_duration'] = form.cleaned_data['sleep_duration']
+            return JsonResponse({"message": "수면 시간이 성공적으로 저장되었습니다."})
+    else:
+        form = SleepDurationForm()
+    
+    return render(request, 'user_info_sleep_duration.html', {'form': form})
+
+def user_info_lifestyle(request):
+    if request.method == "POST":
+        form = LifestyleForm(request.POST)
+        if form.is_valid():
+            request.session['lifestyle'] = form.cleaned_data['lifestyle']
+            return JsonResponse({"message": "라이프스타일 정보가 성공적으로 저장되었습니다."})
+    else:
+        form = LifestyleForm()
+    
+    return render(request, 'user_info_lifestyle.html', {'form': form})
