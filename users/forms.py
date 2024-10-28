@@ -78,3 +78,15 @@ class ExerciseIntensityForm(forms.Form):
     ]
 
     intensity = forms.ChoiceField(label="어떤 강도로 운동을 하나요?", choices=INTENSITY_CHOICES, widget=forms.RadioSelect)
+
+class ExerciseTimeForm(forms.Form):
+    DURATION_CHOICES = [
+        ("under_30", "30분 이내"),
+        ("30_to_60", "30분 ~ 1시간"),
+        ("60_to_90", "1시간 ~ 1시간 30분"),
+        ("90_to_120", "1시간 30분 ~ 2시간"),
+        ("over_120", "2시간 이상")
+    ]
+
+    time = forms.ChoiceField(label="평균 몇 시간 운동을 하나요?", choices=DURATION_CHOICES, widget=forms.RadioSelect
+    )

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .forms import GoalForm, MealChoiceForm, BasicInfoForm, AdditionalInfoForm, SleepDurationForm, LifestyleForm, ExerciseInfoForm
+from .forms import GoalForm, MealChoiceForm, BasicInfoForm, AdditionalInfoForm, SleepDurationForm, LifestyleForm, ExerciseInfoForm, ExerciseTimeForm
+
 
 def user_info_goal(request):
     if request.method == "POST":
@@ -79,7 +80,7 @@ def user_info_additional(request):
 
 
 def user_info_sleep_duration(request):
-    if request.method = "POST":
+    if request.method == "POST":
         form = SleepDurationForm(request.POST)
         if form.is_valid():
             request.session['sleep_duration'] = form.cleaned_data['sleep_duration']
@@ -128,3 +129,14 @@ def user_info_exercise_intensity(request):
     
     return render(request, 'user_info_exercise_intensity.html', {'form': form})
 
+def user_info_exercise_time(request):
+    if request.method == "POST":
+        form = ExerciseTimeForm(request.POST)
+        if form.is_valid():
+            # 선택된 운동 시간을 세션에 저장
+            request.session['exercise_time'] = form.cleaned_data['time']
+            return JsonResponse({"message": "운동 시간이 성공적으로 저장되었습니다."})
+    else:
+        form = ExerciseTimeForm()
+    
+    return render(request, 'user_info_exercise_time.html', {'form': form})
