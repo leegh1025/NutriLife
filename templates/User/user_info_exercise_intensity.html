@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맞춤식단 설정 - 운동 강도</title>
+</head>
+<body>
+    <header>
+        <h1>맞춤식단 설정</h1>
+    </header>
+
+    <main>
+        <p>어떤 강도로 운동을 하나요?</p>
+        <p>운동 강도에 따라 권장 칼로리가 달라져요</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>
+                <input type="radio" name="intensity" value="light"> 가볍게 - 호흡이 자연스럽고 대화가 가능한
+            </label><br>
+
+            <label>
+                <input type="radio" name="intensity" value="moderate"> 보통 - 숨이 약간 차고 대화가 가능한
+            </label><br>
+            
+            <label>
+                <input type="radio" name="intensity" value="somewhat_intense"> 조금 강하게 - 숨이 가빠지며 대화가 조금 어려운
+            </label><br>
+
+            <label>
+                <input type="radio" name="intensity" value="intense"> 매우 강하게 - 숨이 매우 헐떡이며 대화가 불가능한
+            </label><br>
+
+            <button type="submit">다음</button>
+        </form>
+    </main>
+</body>
+</html>

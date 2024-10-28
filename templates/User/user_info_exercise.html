@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맞춤식단 설정 - 운동 여부</title>
+</head>
+<body>
+    <header>
+        <h1>맞춤식단 설정</h1>
+    </header>
+
+    <main>
+        <p>주 3회 이상 꾸준히 운동하나요?</p>
+        <p>운동 여부에 따라 권장 칼로리가 달라져요</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            
+            <label>
+                <input type="radio" name="exercise_regular" value="yes"> 예
+            </label><br>
+            
+            <label>
+                <input type="radio" name="exercise_regular" value="no"> 아니요
+            </label><br>
+
+            <button type="submit">다음</button>
+        </form>
+    </main>
+</body>
+</html>
