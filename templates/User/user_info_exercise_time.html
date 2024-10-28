@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맞춤식단 설정 - 운동 시간</title>
+</head>
+<body>
+    <header>
+        <h1>맞춤식단 설정</h1>
+    </header>
+
+    <main>
+        <p>평균 몇 시간 운동을 하나요?</p>
+        <p>운동 시간에 따라 권장 칼로리가 달라져요</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>
+                <input type="radio" name="duration" value="under_30"> 30분 이내
+            </label><br>
+            
+            <label>
+                <input type="radio" name="duration" value="30_to_60"> 30분 ~ 1시간
+            </label><br>
+
+            <label>
+                <input type="radio" name="duration" value="60_to_90"> 1시간 ~ 1시간 30분
+            </label><br>
+
+            <label>
+                <input type="radio" name="duration" value="90_to_120"> 1시간 30분 ~ 2시간
+            </label><br>
+            
+            <label>
+                <input type="radio" name="duration" value="over_120"> 2시간 이상
+            </label><br>
+
+            <button type="submit">다음</button>
+        </form>
+    </main>
+</body>
+</html>
