@@ -58,3 +58,23 @@ class LifestyleForm(forms.Form):
     ]
 
     lifestyle = forms.ChoiceField(label="주로 어떤 일을 하나요?", choices=LIFESTYLE_CHOICES, widget=forms.RadioSelect)
+
+
+class ExerciseInfoForm(forms.Form):
+    EXERCISE_CHOICES = [
+        ("yes", "예"),
+        ("no", "아니요"),
+    ]
+
+    exercise_regular = forms.ChoiceField(label="주 3회 이상 꾸준히 운동하나요?", choices=EXERCISE_CHOICES, widget=forms.RadioSelect)
+
+
+class ExerciseIntensityForm(forms.Form):
+    INTENSITY_CHOICES = [
+        ("light", "가볍게 - 호흡이 자연스럽고 대화가 가능한"),
+        ("moderate", "보통 - 숨이 약간 차고 대화가 가능한"),
+        ("somewhat_intense", "조금 강하게 - 숨이 가빠지며 대화가 조금 어려운"),
+        ("intense", "매우 강하게 - 숨이 매우 헐떡이며 대화가 불가능한")
+    ]
+
+    intensity = forms.ChoiceField(label="어떤 강도로 운동을 하나요?", choices=INTENSITY_CHOICES, widget=forms.RadioSelect)

@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .forms import GoalForm, MealChoiceForm, BasicInfoForm, AdditionalInfoForm
+from .forms import GoalForm, MealChoiceForm, BasicInfoForm, AdditionalInfoForm, SleepDurationForm, LifestyleForm, ExerciseInfoForm
 
 def user_info_goal(request):
     if request.method == "POST":
@@ -99,3 +99,32 @@ def user_info_lifestyle(request):
         form = LifestyleForm()
     
     return render(request, 'user_info_lifestyle.html', {'form': form})
+
+def user_info_exercise(request):
+    if request.method == "POST":
+        form = ExerciseInfoForm(request.POST)
+        if form.is_valid():
+            request.session['exercise_regular'] = form.cleaned_data['exercise_regular']
+            return JsonResponse({"message": "운동 정보가 성공적으로 저장되었습니다."})
+    else:
+        form = ExerciseInfoForm()
+    
+    return render(request, 'user_info_exercise.html', {'form': form})
+
+def user_info_exercise_intensity(request):
+    # 사용자가 이전에 '예'를 선택했는지 확인
+    if request.session.get('exercise_regular') != 'yes':
+        # '예'를 선택하지 않았으면 이전 페이지로 리다이렉트
+        return redirect('')
+    
+    if request.method == "POST":
+        form = ExerciseIntensityForm(request.POST)
+        if form.is_valid():
+            # 선택된 운동 강도를 세션에 저장
+            request.session['exercise_intensity'] = form.cleaned_data['intensity']
+            return JsonResponse({"message": "운동 강도 정보가 성공적으로 저장되었습니다."})
+    else:
+        form = ExerciseIntensityForm()
+    
+    return render(request, 'user_info_exercise_intensity.html', {'form': form})
+
