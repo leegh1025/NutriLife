@@ -1,0 +1,225 @@
+<html>
+
+<head>
+  <link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' type='text/css'>
+  <link href="/static/css/diet.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+<script>
+    const App = () => {
+  //   States
+  const [row, setRow] = React.useState("");
+  const [col, setCol] = React.useState("");
+  const [amountReq, setAmountReq] = React.useState(0);
+  const [amountEntered, setAmountEntered] = React.useState(0);
+  const [message, setMessage] = React.useState(
+    "Please select an item from the showcase"
+  );
+  const [selected, setSelected] = React.useState("");
+
+  //   Populates the products list
+  const populateProducts = () => {
+    let products = [];
+    let rows = ["A", "B", "C"];
+    for (let x = 0; x < rows.length; x++) {
+      for (let cols = 1; cols <= 6; cols++) {
+        products.push(
+          React.createElement(
+            'div',
+            {
+              id: `${rows[x]}${cols}`,
+              className: selected === `${rows[x]}${cols}` ? "product active" : "product "
+            },
+            React.createElement('img', { src: "https://pngimg.com/uploads/cocacola/coca_cola_PNG8899.png" }),
+            `${rows[x]}${cols}`
+          )
+        );
+      }
+    }
+    return products;
+  };
+
+  //   Populates the number buttons
+  const populateNumberButton = () => {
+    let buttons = [];
+    for (let cols = 1; cols <= 6; cols++) {
+      buttons.push(
+        React.createElement(
+          'button',
+          { className: "operator", onClick: () => setCol(cols) },
+          cols
+        )
+      );
+    }
+    return buttons;
+  };
+
+  const populateMoneyButtons = () => {
+    let allowedCoins = {
+      QUARTER: 25,
+      DIME: 10,
+      NICKEL: 5
+    };
+    let buttons = [];
+    Object.keys(allowedCoins).map((type) => {
+      buttons.push(
+        React.createElement(
+          'button',
+          { className: "small-button", onClick: () => insertMoney(type) },
+          `¢ ${allowedCoins[type]}`
+        )
+      );
+    });
+    return buttons;
+  };
+
+  const insertMoney = (coin) => {
+    switch (coin) {
+      case "QUARTER":
+        setAmountEntered(amountEntered + 25);
+        break;
+      case "DIME":
+        setAmountEntered(amountEntered + 10);
+        break;
+      default:
+        setAmountEntered(amountEntered + 5);
+    }
+  };
+
+  const cancelTransaction = () => {
+    setMessage(`Visit us again, amount returned - $ ${amountEntered / 100}`);
+    setAmountReq(0);
+    setAmountEntered(0);
+    setRow("");
+    setCol("");
+    setTimeout(() => {
+      setMessage("Please select an item from the showcase");
+    }, 5000);
+  };
+
+  const purchaseTransaction = () => {
+    if (!row || !col) {
+      return setMessage(
+        `No Product selected, please make a selection from the showcase`
+      );
+    }
+    if (amountReq > amountEntered / 100) {
+      return setMessage(
+        `Insufficient amount. Please enter additional amount or cancel to abort transaction.`
+      );
+    }
+    let change = amountEntered / 100 - amountReq;
+    setMessage(
+      `Please collect your product ${row}${col}, collect your change $ ${change.toFixed(
+        2
+      )}. Thank you for shopping with us`
+    );
+    setAmountReq(0);
+    setAmountEntered(0);
+    setRow("");
+    setCol("");
+    setTimeout(() => {
+      setMessage("Please select an item from the showcase");
+    }, 5000);
+  };
+
+  const displayMessage = () => {
+    return React.createElement(
+      React.Fragment,
+      null,
+      React.createElement('div', { className: "main-text" }, message),
+      React.createElement(
+        'div',
+        { className: "sub-text" },
+        React.createElement('div', null, `Item : ${row}${col}`),
+        React.createElement('div', null, `Amount Inserted : $  ${amountEntered / 100}`)
+      )
+    );
+  };
+
+  React.useEffect(() => {
+    setSelected(`${row}${col}`);
+    if (row && col) {
+      switch (row) {
+        case "A":
+          setAmountReq(0.5);
+          setMessage(`Price of the item $0.50`);
+          break;
+        case "B":
+          setAmountReq(0.75);
+          setMessage(`Price of the item $0.75`);
+          break;
+        default:
+          setAmountReq(1.0);
+          setMessage(`Price of the item $1.00`);
+      }
+    }
+  }, [row, col]);
+
+  return React.createElement(
+    'div',
+    { className: "container" },
+    React.createElement(
+      'div',
+      { id: "vending-machine" },
+      React.createElement('div', { className: "glass-panel" },
+        React.createElement('div', { className: "glass-shine" })
+      ),
+      React.createElement('div', { id: "display" }, populateProducts()),
+      React.createElement(
+        'div',
+        { id: "controls" },
+        React.createElement('div', { id: "mini-display" }, displayMessage()),
+        React.createElement(
+          'div',
+          { id: "keyboard" },
+          React.createElement(
+            'button',
+            {
+              className: "operator",
+              onClick: () => {
+                setCol("");
+                setRow("A");
+              }
+            },
+            "A"
+          ),
+          React.createElement(
+            'button',
+            {
+              className: "operator",
+              onClick: () => {
+                setCol("");
+                setRow("B");
+              }
+            },
+            "B"
+          ),
+          React.createElement(
+            'button',
+            {
+              className: "operator",
+              onClick: () => {
+                setCol("");
+                setRow("C");
+              }
+            },
+            "C"
+          ),
+          populateNumberButton(),
+          populateMoneyButtons(),
+          React.createElement('button', { className: "big-button cancel", onClick: cancelTransaction }, "Cancel"),
+          React.createElement('button', { className: "big-button purchase", onClick: purchaseTransaction }, "Purchase")
+        )
+      )
+    )
+  );
+};
+
+ReactDOM.render(React.createElement(App), document.getElementById("root"));
+</script>
+
+</html>
