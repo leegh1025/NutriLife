@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>맞춤식단 설정 - 기본 정보</title>
+</head>
+<body>
+    <header>
+        <h1>맞춤식단 설정</h1>
+    </header>
+
+    <main>
+        <p>기본정보를 알려주세요</p>
+        <p>성별, 연령대에 따라 몸에 필요한 식단을 추천해드려요</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="birth_year">출생년도</label>
+            <input type="number" id="birth_year" name="birth_year" placeholder="예:2000">
+
+            <p>성별</p>
+            <label>
+                <input type="radio" name="gender" value="M"> 남자
+            </label>
+            <label>
+                <input type="radio" name="gender" value="F"> 여자
+            </label>
+
+            <button type="submit">다음</button>
+        </form>
+    </main>
+
+</body>
+</html>

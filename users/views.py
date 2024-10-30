@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .forms import GoalForm, MealChoiceForm, BasicInfoForm, AdditionalInfoForm
+from .forms import GoalForm, MealChoiceForm, BasicInfoForm, AdditionalInfoForm, SleepDurationForm, LifestyleForm, ExerciseInfoForm, ExerciseIntensityForm, ExerciseTimeForm
+from .models import UserInfo
 
 def user_info_goal(request):
     if request.method == "POST":
@@ -8,11 +9,11 @@ def user_info_goal(request):
         if form.is_valid():
             # 선택된 목표를 세션에 저장
             request.session['goal'] = form.cleaned_data['goal']
-            return JsonResponse({"message": "목표가 성공적으로 저장되었습니다."})
+            return redirect('/user_info/count/')
     else:
         form = GoalForm()
     
-    return render(request, 'user_info_goal.html', {'form': form})
+    return render(request, 'User/user_info_goal.html', {'form': form})
 
 
 def user_info_count(request):
@@ -20,11 +21,11 @@ def user_info_count(request):
         form = MealChoiceForm(request.POST)
         if form.is_valid():
             request.session['meal_choices'] = form.cleaned_data['meal_choices']
-            return JsonResponse({"message": "식사 횟수가 성공적으로 저장되었습니다."})
+            return redirect('/user_info/basic/')
     else:
         form = MealChoiceForm()
     
-    return render(request, 'user_info_count.html', {'form': form})
+    return render(request, 'User/user_info_count.html', {'form': form})
 
 
 def user_info_basic(request):
@@ -33,11 +34,11 @@ def user_info_basic(request):
         if form.is_valid():
             request.session['birth_year'] = form.cleaned_data['birth_year']
             request.session['gender'] = form.cleaned_data['gender']
-            return JsonResponse({"message": "기본 정보가 성공적으로 저장되었습니다."})
+            return redirect('/user_info/additional')
     else:
         form = BasicInfoForm()
     
-    return render(request, 'user_info_basic.html', {'form': form})
+    return render(request, 'User/user_info_basic.html', {'form': form})
 
 
 
@@ -71,8 +72,77 @@ def user_info_additional(request):
             )
             user_info.save()
 
-            return JsonResponse({"message": "추가 정보가 성공적으로 저장되었습니다."})
+            return redirect('/user_info/sleep_duration')
     else:
         form = AdditionalInfoForm()
 
-    return render(request, 'user_info_additional.html', {'form': form})
+    return render(request, 'User/user_info_additional.html', {'form': form})
+
+
+def user_info_sleep_duration(request):
+    if request.method == "POST":
+        form = SleepDurationForm(request.POST)
+        if form.is_valid():
+            request.session['sleep_duration'] = form.cleaned_data['sleep_duration']
+            return redirect('/user_info/lifestyle')
+    else:
+        form = SleepDurationForm()
+    
+    return render(request, 'User/user_info_sleep_duration.html', {'form': form})
+
+def user_info_lifestyle(request):
+    if request.method == "POST":
+        form = LifestyleForm(request.POST)
+        if form.is_valid():
+            request.session['lifestyle'] = form.cleaned_data['lifestyle']
+            return redirect('/user_info/exercise')
+    else:
+        form = LifestyleForm()
+    
+    return render(request, 'User/user_info_lifestyle.html', {'form': form})
+
+def user_info_exercise(request):
+    if request.method == "POST":
+        form = ExerciseInfoForm(request.POST)
+        if form.is_valid():
+            exercise_regular = form.cleaned_data['exercise_regular']
+            request.session['exercise_regular'] = exercise_regular
+            if exercise_regular == "yes":
+                # "예"를 선택했을 경우, 운동 강도 페이지로 이동
+                return redirect('/user_info/exercise_intensity/')
+            else:
+                # "아니요"를 선택했을 경우, 프로세스 종료
+                return JsonResponse({"message": "운동 정보가 성공적으로 저장되었습니다. 프로세스가 종료됩니다."})
+    else:
+        form = ExerciseInfoForm()
+    
+    return render(request, 'User/user_info_exercise.html', {'form': form})
+
+def user_info_exercise_intensity(request):
+    # 사용자가 이전에 '예'를 선택했는지 확인
+    if request.session.get('exercise_regular') != 'yes':
+        # '예'를 선택하지 않았으면 이전 페이지로 리다이렉트
+        return redirect('')
+    
+    if request.method == "POST":
+        form = ExerciseIntensityForm(request.POST)
+        if form.is_valid():
+            # 선택된 운동 강도를 세션에 저장
+            request.session['exercise_intensity'] = form.cleaned_data['intensity']
+            return redirect('/user_info/exercise_time/')
+    else:
+        form = ExerciseIntensityForm()
+    
+    return render(request, 'User/user_info_exercise_intensity.html', {'form': form})
+
+def user_info_exercise_time(request):
+    if request.method == "POST":
+        form = ExerciseTimeForm(request.POST)
+        if form.is_valid():
+            # 선택된 운동 시간을 세션에 저장
+            request.session['exercise_time'] = form.cleaned_data['time']
+            return JsonResponse({"message": "운동 시간이 성공적으로 저장되었습니다."})
+    else:
+        form = ExerciseTimeForm()
+    
+    return render(request, 'User/user_info_exercise_time.html', {'form': form})

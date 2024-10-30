@@ -37,3 +37,56 @@ class AdditionalInfoForm(forms.Form):
     target_weight = forms.FloatField(label="목표 체중 (kg)")
     muscle = forms.FloatField(label="골격근량 (kg)", required=False)
     body_fat_percent = forms.FloatField(label="체지방률 (%)", required=False)
+
+class SleepDurationForm(forms.Form):
+    SLEEP_CHOICES = [
+        ("under_4", "4시간 이하"),
+        ("5_6", "5 ~ 6시간"),
+        ("7_8", "7 ~ 8시간"),
+        ("over_9", "9시간 이상")
+    ]
+
+    sleep_duration = forms.ChoiceField(label="하루 평균 수면 시간", choices=SLEEP_CHOICES, widget=forms.RadioSelect)
+
+class LifestyleForm(forms.Form):
+    LIFESTYLE_CHOICES = [
+        ("active_job", "활동적인 일을 하고 있어요 (영업직, 운동선수, 트레이너 등)"),
+        ("desk_job", "주로 앉아서 근무해요 (사무직, 학생 등)"),
+        ("standing_job", "주로 서서 근무해요 (승무원, 교사 등)"),
+        ("kitchen_job", "가정 및 주방 일을 하고 있어요 (요식업자, 주부 등)"),
+        ("not_working", "현재는 쉬고 있어요 (휴직, 무직 등)"),
+    ]
+
+    lifestyle = forms.ChoiceField(label="주로 어떤 일을 하나요?", choices=LIFESTYLE_CHOICES, widget=forms.RadioSelect)
+
+
+class ExerciseInfoForm(forms.Form):
+    EXERCISE_CHOICES = [
+        ("yes", "예"),
+        ("no", "아니요"),
+    ]
+
+    exercise_regular = forms.ChoiceField(label="주 3회 이상 꾸준히 운동하나요?", choices=EXERCISE_CHOICES, widget=forms.RadioSelect)
+
+
+class ExerciseIntensityForm(forms.Form):
+    INTENSITY_CHOICES = [
+        ("light", "가볍게 - 호흡이 자연스럽고 대화가 가능한"),
+        ("moderate", "보통 - 숨이 약간 차고 대화가 가능한"),
+        ("somewhat_intense", "조금 강하게 - 숨이 가빠지며 대화가 조금 어려운"),
+        ("intense", "매우 강하게 - 숨이 매우 헐떡이며 대화가 불가능한")
+    ]
+
+    intensity = forms.ChoiceField(label="어떤 강도로 운동을 하나요?", choices=INTENSITY_CHOICES, widget=forms.RadioSelect)
+
+class ExerciseTimeForm(forms.Form):
+    DURATION_CHOICES = [
+        ("under_30", "30분 이내"),
+        ("30_to_60", "30분 ~ 1시간"),
+        ("60_to_90", "1시간 ~ 1시간 30분"),
+        ("90_to_120", "1시간 30분 ~ 2시간"),
+        ("over_120", "2시간 이상")
+    ]
+
+    time = forms.ChoiceField(label="평균 몇 시간 운동을 하나요?", choices=DURATION_CHOICES, widget=forms.RadioSelect
+    )
