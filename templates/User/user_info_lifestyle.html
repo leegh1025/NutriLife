@@ -1,44 +1,88 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>맞춤식단 설정 - 라이프스타일</title>
+    <link rel="stylesheet" href="{% static 'css/goal.css' %}">  
 </head>
 <body>
-    <header>
-        <h1>맞춤식단 설정</h1>
-    </header>
-
     <main>
-        <p>주로 어떤 일을 하나요?</p>
-        <p>하루 소비 에너지량에 따라 권장 칼로리가 달라져요</p>
-        
-        <form method="POST">
-            {% csrf_token %}
-            
-            <label>
-                <input type="radio" name="lifestyle" value="active_job"> 활동적인 일을 하고 있어요 (영업직, 운동선수, 트레이너 등)
-            </label><br>
-
-            <label>
-                <input type="radio" name="lifestyle" value="desk_job"> 주로 앉아서 근무해요 (사무직, 학생 등)
-            </label><br>
-            
-            <label>
-                <input type="radio" name="lifestyle" value="standing_job"> 주로 서서 근무해요 (승무원, 교사 등)
-            </label><br>
-            
-            <label>
-                <input type="radio" name="lifestyle" value="kitchen_job"> 가정 및 주방 일을 하고 있어요 (요식업자, 주부 등)
-            </label><br>
-            
-            <label>
-                <input type="radio" name="lifestyle" value="not_working"> 현재는 쉬고 있어요 (휴직, 무직 등)
-            </label><br>
-
-            <button type="submit">다음</button>
-        </form>
+        <aside>
+            <ul class="Links">
+                <li onclick="Navigate(0)" class="activeLink"><i class="fa-solid fa-house"></i>
+                    <p>목표 선택</p>
+                </li>
+                <li onclick="Navigate(1)"><i class="fa-solid fa-user" ></i>
+                    <p>끼니 선택</p>
+                </li>
+                <li onclick="Navigate(2)"><i class="fa-solid fa-list"></i>
+                    <p>기본 정보 입력</p>
+                </li>
+                <li onclick="Navigate(3)"><i class="fa-solid fa-images"></i>
+                    <p>신장 및 체중 입력</p>
+                </li>
+                <li onclick="Navigate(4)"><i class="fa-solid fa-comments"></i>
+                    <p>수면시간 선택</p>
+                </li>
+                <li onclick="Navigate(5)"><i class="fa-solid fa-comments"></i>
+                    <p>에너지 소비량 선택</p>
+                </li>
+                <li onclick="Navigate(6)"><i class="fa-solid fa-comments"></i>
+                    <p>운동 여부 선택</p>
+                </li>
+            </ul>
+        </aside>
+        <div class="swiper mySwiper">
+            <div class="SlideContainer swiper-wrapper">
+                <div class="swiper-slide home-slide">
+                    <div class="HomeContent">
+                        <h1>Nutri <span class="stylized-name">Life</span>,</h1>
+                        <h2>당신의 목표를 위한<span class="proffesions"> 맞춤 식단</span></h2>
+                        <p class="heroline">주로 어떤 일을 하나요? 하루 소비 에너지량에 따라 권장 칼로리가 달라져요</p>
+                        <div class="buttonGroup">
+                            <form method="POST">
+                                {% csrf_token %}
+                                
+                                <label>
+                                    <input type="radio" name="lifestyle" value="active_job"> 활동적인 일을 하고 있어요 (영업직, 운동선수, 트레이너 등)
+                                </label><br>
+                    
+                                <label>
+                                    <input type="radio" name="lifestyle" value="desk_job"> 주로 앉아서 근무해요 (사무직, 학생 등)
+                                </label><br>
+                                
+                                <label>
+                                    <input type="radio" name="lifestyle" value="standing_job"> 주로 서서 근무해요 (승무원, 교사 등)
+                                </label><br>
+                                
+                                <label>
+                                    <input type="radio" name="lifestyle" value="kitchen_job"> 가정 및 주방 일을 하고 있어요 (요식업자, 주부 등)
+                                </label><br>
+                                
+                                <label>
+                                    <input type="radio" name="lifestyle" value="not_working"> 현재는 쉬고 있어요 (휴직, 무직 등)
+                                </label><br>
+                    
+                                <button type="submit">다음</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="SideImg">
+                        <div class="top-right-corner">
+                            <hr class="hr1">
+                            <hr class="hr2">
+                        </div>
+                        <img src="/media/logo.png" alt="nutrilife 로고">
+                        <div class="bottom-left-corner">
+                            <hr class="hr1">
+                            <hr class="hr2">
+                        </div>
+                    </div>
+                </div>
+            </div>
     </main>
 </body>
 </html>

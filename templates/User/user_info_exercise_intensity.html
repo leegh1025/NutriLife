@@ -1,40 +1,84 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>맞춤식단 설정 - 운동 강도</title>
+    <link rel="stylesheet" href="{% static 'css/goal.css' %}">  
 </head>
 <body>
-    <header>
-        <h1>맞춤식단 설정</h1>
-    </header>
-
     <main>
-        <p>어떤 강도로 운동을 하나요?</p>
-        <p>운동 강도에 따라 권장 칼로리가 달라져요</p>
-        
-        <form method="POST">
-            {% csrf_token %}
-
-            <label>
-                <input type="radio" name="intensity" value="light"> 가볍게 - 호흡이 자연스럽고 대화가 가능한
-            </label><br>
-
-            <label>
-                <input type="radio" name="intensity" value="moderate"> 보통 - 숨이 약간 차고 대화가 가능한
-            </label><br>
-            
-            <label>
-                <input type="radio" name="intensity" value="somewhat_intense"> 조금 강하게 - 숨이 가빠지며 대화가 조금 어려운
-            </label><br>
-
-            <label>
-                <input type="radio" name="intensity" value="intense"> 매우 강하게 - 숨이 매우 헐떡이며 대화가 불가능한
-            </label><br>
-
-            <button type="submit">다음</button>
-        </form>
+        <aside>
+            <ul class="Links">
+                <li onclick="Navigate(0)" class="activeLink"><i class="fa-solid fa-house"></i>
+                    <p>목표 선택</p>
+                </li>
+                <li onclick="Navigate(1)"><i class="fa-solid fa-user" ></i>
+                    <p>끼니 선택</p>
+                </li>
+                <li onclick="Navigate(2)"><i class="fa-solid fa-list"></i>
+                    <p>기본 정보 입력</p>
+                </li>
+                <li onclick="Navigate(3)"><i class="fa-solid fa-images"></i>
+                    <p>신장 및 체중 입력</p>
+                </li>
+                <li onclick="Navigate(4)"><i class="fa-solid fa-comments"></i>
+                    <p>수면시간 선택</p>
+                </li>
+                <li onclick="Navigate(5)"><i class="fa-solid fa-comments"></i>
+                    <p>에너지 소비량 선택</p>
+                </li>
+                <li onclick="Navigate(6)"><i class="fa-solid fa-comments"></i>
+                    <p>운동 여부 선택</p>
+                </li>
+            </ul>
+        </aside>
+        <div class="swiper mySwiper">
+            <div class="SlideContainer swiper-wrapper">
+                <div class="swiper-slide home-slide">
+                    <div class="HomeContent">
+                        <h1>Nutri <span class="stylized-name">Life</span>,</h1>
+                        <h2>당신의 목표를 위한<span class="proffesions"> 맞춤 식단</span></h2>
+                        <p class="heroline">어떤 강도로 운동을 하나요? 운동 강도에 따라 권장 칼로리가 달라져요</p>
+                        <div class="buttonGroup">
+                            <form method="POST">
+                                {% csrf_token %}
+                    
+                                <label>
+                                    <input type="radio" name="intensity" value="light"> 가볍게 - 호흡이 자연스럽고 대화가 가능한
+                                </label><br>
+                    
+                                <label>
+                                    <input type="radio" name="intensity" value="moderate"> 보통 - 숨이 약간 차고 대화가 가능한
+                                </label><br>
+                                
+                                <label>
+                                    <input type="radio" name="intensity" value="somewhat_intense"> 조금 강하게 - 숨이 가빠지며 대화가 조금 어려운
+                                </label><br>
+                    
+                                <label>
+                                    <input type="radio" name="intensity" value="intense"> 매우 강하게 - 숨이 매우 헐떡이며 대화가 불가능한
+                                </label><br>
+                    
+                                <button type="submit">다음</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="SideImg">
+                        <div class="top-right-corner">
+                            <hr class="hr1">
+                            <hr class="hr2">
+                        </div>
+                        <img src="/media/logo.png" alt="nutrilife 로고">
+                        <div class="bottom-left-corner">
+                            <hr class="hr1">
+                            <hr class="hr2">
+                        </div>
+                    </div>
+                </div>
+            </div>
     </main>
 </body>
 </html>
