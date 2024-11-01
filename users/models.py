@@ -11,4 +11,9 @@ class UserInfo(models.Model):
     target_weight = models.FloatField()
     muscle = models.FloatField(null=True, blank=True)
     body_fat_percent = models.FloatField(null=True, blank=True)
+    sleep_duration = models.CharField(max_length=10)
+    lifestyle = models.CharField(max_length=15, null=True, blank=True)
+    exercise_regular = models.CharField(max_length=3, null=True, blank=True)
+    intensity = models.CharField(max_length=20, null=True, blank=True)
+    time = models.CharField(max_length=15, null=True, blank=True)
 

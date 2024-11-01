@@ -15,6 +15,7 @@ urlpatterns = [
     path('user_info/exercise/', views.user_info_exercise, name='user_info_exercise'),
     path('user_info/exercise_intensity/', views.user_info_exercise_intensity, name='user_info_exercise_intensity'),
     path('user_info/exercise_time/', views.user_info_exercise_time, name='user_info_exercise_time'),
+    path('user_info/complete/', views.user_info_complete, name='user_info_complete'),
 ]
 
 
