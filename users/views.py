@@ -155,6 +155,10 @@ def user_info_complete(request):
     intensity = request.session.get('exercise_intensity')
     time = request.session.get('exercise_time')
 
+    import datetime
+    current_year = datetime.datetime.now().year
+    age = current_year - birth_year
+
     # 데이터베이스에 저장
     user_info = UserInfo.objects.create(
         goal=goal,
