@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .forms import GoalForm, MealChoiceForm, BasicInfoForm, AdditionalInfoForm, SleepDurationForm, LifestyleForm, ExerciseInfoForm, ExerciseIntensityForm, ExerciseTimeForm
 from .models import UserInfo
+from .utils import calculate_bmr, calculate_tdee, adjust_macros, generate_daily_meals
 
 def user_info_goal(request):
     if request.method == "POST":
