@@ -9,7 +9,7 @@ def calculate_bmr(user_data):
 
 def calculate_tdee(bmr, user_activity_data):
     activity_multiplier = calculate_activity_multiplier(
-        user_activity_data['lifestyle'],
+        user_activity_data['activity_level'],
         user_activity_data['exercise'],
         user_activity_data['sleep_category']
     )
@@ -58,7 +58,7 @@ def meets_macro_goal(selected, macro_goal, tolerance=0.1):
     upper_bound = macro_goal * (1 + tolerance)
     return lower_bound <= total_macro <= upper_bound
 
-def calculate_activity_multiplier(lifestyle, exercise_data, sleep_category):
+def calculate_activity_multiplier(activity_level, exercise_regular, sleep_duration):
     # 직업 활동 계수 직접 처리
     job_factors = {
         'active_job': 1.725,     
@@ -67,7 +67,7 @@ def calculate_activity_multiplier(lifestyle, exercise_data, sleep_category):
         'kitchen_job': 1.5,      
         'not_working': 1.2       
     }
-    base_multiplier = job_factors.get(lifestyle, 1.2)
+    base_multiplier = job_factors.get(activity_level, 1.2)
 
     # 수면 계수 직접 처리
     sleep_factors = {
@@ -76,19 +76,19 @@ def calculate_activity_multiplier(lifestyle, exercise_data, sleep_category):
         '7_8': 1.0,
         'over_9': 0.975
     }
-    sleep_factor = sleep_factors.get(sleep_category, 1.0)
+    sleep_factor = sleep_factors.get(sleep_duration, 1.0)
 
     # 운동 계산 직접 처리
     exercise_multiplier = 0
-    if exercise_data['frequency']:
+    if exercise_regular['frequency']:
         exercise_intensity_factors = {
             'light': 0.1,
             'moderate': 0.2,
             'somewhat_intense': 0.3,
             'intense': 0.4
         }
-        intensity_factor = exercise_intensity_factors.get(exercise_data['intensity'], 0.1)
-        duration_factor = exercise_data['duration'] / 60.0
+        intensity_factor = exercise_intensity_factors.get(exercise_regular['intensity'], 0.1)
+        duration_factor = exercise_regular['duration'] / 60.0
         exercise_multiplier = intensity_factor * duration_factor
 
     total_multiplier = base_multiplier + exercise_multiplier

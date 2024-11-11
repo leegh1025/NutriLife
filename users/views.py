@@ -154,12 +154,7 @@ def user_info_complete(request):
     exercise_regular = request.session.get('exercise_regular')
     intensity = request.session.get('exercise_intensity')
     time = request.session.get('exercise_time')
-
-    import datetime
-    current_year = datetime.datetime.now().year
-    age = current_year - birth_year
-
-    # 데이터베이스에 저장
+    
     user_info = UserInfo.objects.create(
         goal=goal,
         meal_choices=" ".join(meal_choices) if meal_choices else None,  # 리스트일 경우 문자열로 변환
@@ -178,8 +173,47 @@ def user_info_complete(request):
     )
     user_info.save()
 
+    import datetime
+    current_year = datetime.datetime.now().year
+    age = current_year - birth_year
 
-    return JsonResponse({"message": "모든 정보가 성공적으로 저장되었습니다."})
+    # 사용자 데이터 준비
+    user_data = {
+        'height': height,
+        'weight': weight,
+        'gender': 'male' if gender == 'M' else 'female',
+        'age': age,
+        'activity_level': lifestyle,
+        'exercise': {
+            'frequency': exercise_regular == 'yes',
+            'intensity': intensity,
+            'duration': int(time.split('_')[-1]) if time else 0
+        },
+        'sleep_category': sleep_duration,
+        'goal': goal,
+        'meal_times': meal_choices if isinstance(meal_choices, list) else meal_choices.split(" ") if meal_choices else ['breakfast', 'lunch', 'dinner']
+    }
+
+    # BMR 계산
+    bmr = calculate_bmr(user_data)
+    # TDEE 계산
+    tdee = calculate_tdee(bmr, user_data)
+    # 매크로 비율 계산
+    daily_macros = adjust_macros(tdee, goal)
+
+    request.session['bmr'] = bmr
+    request.session['tdee'] = tdee
+    request.session['daily_macros'] = daily_macros
+
+    return redirect('user_info_results')
+
+    # 식단 생성
+    # carbs_list = [{'name': '쌀밥', 'carbs': 40, 'protein': 3, 'fat': 0.5}, ]  # 예시
+    # protein_list = [{'name': '닭가슴살', 'carbs': 0, 'protein': 25, 'fat': 1.5}, ]
+    # fat_list = [{'name': '아몬드', 'carbs': 6, 'protein': 6, 'fat': 14}, ]
+    # meals = generate_daily_meals(user_data, carbs_list, protein_list, fat_list)
+
+
 
 def save_user_info(request):
     # 세션에서 필요한 데이터 가져오기
@@ -215,3 +249,18 @@ def save_user_info(request):
     request.session.flush()  # 세션 정리
 
     return JsonResponse({"message": "모든 정보가 성공적으로 저장되었습니다."})
+
+def user_info_results(request):
+    # BMR, TDEE, daily_macros, meals 데이터 가져오기
+    bmr = request.session.get('bmr')
+    tdee = request.session.get('tdee')
+    daily_macros = request.session.get('daily_macros')
+    meals = request.session.get('meals')
+
+    # 데이터 렌더링
+    return render(request, 'User/results.html', {
+        'bmr': bmr,
+        'tdee': tdee,
+        'daily_macros': daily_macros,
+        'meals': meals
+    })
