@@ -26,17 +26,28 @@
         </section>
 
         <section>
-            <h3>일일 식단</h3>
-            <ul>
-                {% for meal in meals %}
-                <li>
-                    <strong>{{ meal.meal_time }}</strong>: 
-                    탄수화물 {{ meal.meal.carbs|floatformat:1 }} kcal, 
-                    단백질 {{ meal.meal.protein|floatformat:1 }} kcal, 
-                    지방 {{ meal.meal.fats|floatformat:1 }} kcal
-                </li>
-                {% endfor %}
-            </ul>
+            <h2>식단</h2>
+            {% for meal in meals %}
+                <h3>{{ meal.meal_time|capfirst }}</h3>
+                <p><strong>탄수화물:</strong></p>
+                <ul>
+                    {% for carb in meal.meal.carbs %}
+                        <li>{{ carb.name }}: {{ carb.amount }}g</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>단백질:</strong></p>
+                <ul>
+                    {% for protein in meal.meal.protein %}
+                        <li>{{ protein.name }}: {{ protein.amount }}g</li>
+                    {% endfor %}
+                </ul>
+                <p><strong>지방:</strong></p>
+                <ul>
+                    {% for fat in meal.meal.fats %}
+                        <li>{{ fat.name }}: {{ fat.amount }}g</li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
         </section>
     </main>
 </body>

@@ -15,8 +15,6 @@ def calculate_tdee(bmr, user_activity_data):
     )
     return round(bmr * activity_multiplier, 1)
 
-# 추가 유틸리티 함수: get_job_factor, get_sleep_factor, get_exercise_factor
-# 이 함수들은 알고리즘에서 직접 사용됩니다.
 
 def adjust_macros(tdee, goal):
     if goal == 'lose_weight':
@@ -31,30 +29,59 @@ def adjust_macros(tdee, goal):
         # 기본값 (목표가 설정되지 않은 경우)
         return {'carbs': 0.6 * tdee, 'protein': 0.2 * tdee, 'fats': 0.2 * tdee}
 
-def generate_daily_meals(user_data, carbs_list, protein_list, fat_list):
+def generate_daily_meals(user_data, carbs_list, protein_list, fat_list, meal_ratios):
     bmr = calculate_bmr(user_data)
     tdee = calculate_tdee(bmr, user_data)
     daily_macros = adjust_macros(tdee, user_data['goal'])
+
+
     meals = []
     for meal_time in user_data['meal_times']:
+        ratio = meal_ratios[meal_time]
+        macro_goals_per_meal = {
+            'carbs': daily_macros['carbs'] * ratio,
+            'protein': daily_macros['protein'] * ratio,
+            'fats': daily_macros['fats'] * ratio
+        } 
         meals.append({
             'meal_time': meal_time,
-            'meal': generate_meal(carbs_list, protein_list, fat_list, daily_macros)
+            'meal': generate_meal(carbs_list, protein_list, fat_list, macro_goals_per_meal)
         })
     return meals
 
 def generate_meal(carbs_list, protein_list, fat_list, macro_goals):
     return {
-        'carbs': select_component(carbs_list, macro_goals['carbs']),
-        'protein': select_component(protein_list, macro_goals['protein']),
-        'fats': select_component(fat_list, macro_goals['fats'])
+        'carbs': calculate_portions(
+            select_component(carbs_list, macro_goals['carbs'], 'carbs'),
+            macro_goals['carbs'], 'carbs'
+        ),
+        'protein': calculate_portions(
+            select_component(protein_list, macro_goals['protein'], 'protein'),
+            macro_goals['protein'], 'protein'
+        ),
+        'fats': calculate_portions(
+            select_component(fat_list, macro_goals['fats'], 'fat'),
+            macro_goals['fats'], 'fat'
+        ),
     }
+    
+def calculate_portions(selected_items, macro_goal, macro_key):
+    total_macro = sum(item[macro_key] for item in selected_items) 
+    portioned_items = []
+    for item in selected_items:
+        ratio = macro_goal / total_macro if total_macro > 0 else 0
+        adjusted_amount = round(ratio * item[macro_key], 1)  
+        portioned_items.append({'name': item['name'], 'amount': adjusted_amount})
+    return portioned_items
 
-def select_component(source_list, macro_goal):
+def select_component(source_list, macro_goal, macro_key):
     selected = []
-    while not meets_macro_goal(selected, macro_goal):
-        component = random.choice(source_list)
-        selected.append(component)
+    total_macro = 0  
+    for item in source_list:
+        if total_macro >= macro_goal:
+            break  # 목표치를 초과하면 중단
+        selected.append(item)
+        total_macro += item[macro_key]  
     return selected
 
 def meets_macro_goal(selected, macro_goal, tolerance=0.1):
@@ -64,17 +91,15 @@ def meets_macro_goal(selected, macro_goal, tolerance=0.1):
     return lower_bound <= total_macro <= upper_bound
 
 def calculate_activity_multiplier(activity_level, exercise_regular, sleep_duration):
-    # 직업 활동 계수 직접 처리
     job_factors = {
-        'active_job': 1.725,     
-        'desk_job': 1.2,         
-        'standing_job': 1.4,     
-        'kitchen_job': 1.5,      
-        'not_working': 1.2       
+        'active_job': 1.5,     
+        'desk_job': 1.1,         
+        'standing_job': 1.25,     
+        'kitchen_job': 1.35,      
+        'not_working': 1.1       
     }
-    base_multiplier = job_factors.get(activity_level, 1.2)
+    base_multiplier = job_factors.get(activity_level, 1.1)
 
-    # 수면 계수 직접 처리
     sleep_factors = {
         'under_4': 0.9,
         '5_6': 0.95,
@@ -83,7 +108,6 @@ def calculate_activity_multiplier(activity_level, exercise_regular, sleep_durati
     }
     sleep_factor = sleep_factors.get(sleep_duration, 1.0)
 
-    # 운동 계산 직접 처리
     exercise_multiplier = 0
     if exercise_regular['frequency']:
         exercise_intensity_factors = {

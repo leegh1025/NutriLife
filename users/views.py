@@ -201,17 +201,40 @@ def user_info_complete(request):
     # 매크로 비율 계산
     daily_macros = adjust_macros(tdee, goal)
 
+    meal_ratios = {
+        'breakfast': 0.3,  # 30% 아침
+        'lunch': 0.4,      # 40% 점심
+        'dinner': 0.3      # 30% 저녁
+    }
+
+
+    carbs_list = [
+        {'name': '쌀밥', 'carbs': 40, 'protein': 3, 'fat': 0.5},
+        {'name': '고구마', 'carbs': 27, 'protein': 2, 'fat': 0.1},
+        {'name': '통밀 파스타', 'carbs': 30, 'protein': 5, 'fat': 1.2},
+    ]
+    protein_list = [
+        {'name': '닭가슴살', 'carbs': 0, 'protein': 25, 'fat': 1.5},
+        {'name': '계란', 'carbs': 1, 'protein': 6, 'fat': 5},
+        {'name': '두부', 'carbs': 3, 'protein': 8, 'fat': 4},
+    ]
+    fat_list = [
+        {'name': '아몬드', 'carbs': 6, 'protein': 6, 'fat': 14},
+        {'name': '아보카도', 'carbs': 9, 'protein': 2, 'fat': 15},
+        {'name': '땅콩버터', 'carbs': 6, 'protein': 8, 'fat': 16},
+    ]
+
+    # 식단 생성
+    meals = generate_daily_meals(user_data, carbs_list, protein_list, fat_list, meal_ratios)
+
     request.session['bmr'] = bmr
     request.session['tdee'] = tdee
     request.session['daily_macros'] = daily_macros
+    request.session['meals'] = meals
 
     return redirect('user_info_results')
 
-    # 식단 생성
-    # carbs_list = [{'name': '쌀밥', 'carbs': 40, 'protein': 3, 'fat': 0.5}, ]  # 예시
-    # protein_list = [{'name': '닭가슴살', 'carbs': 0, 'protein': 25, 'fat': 1.5}, ]
-    # fat_list = [{'name': '아몬드', 'carbs': 6, 'protein': 6, 'fat': 14}, ]
-    # meals = generate_daily_meals(user_data, carbs_list, protein_list, fat_list)
+
 
 
 
