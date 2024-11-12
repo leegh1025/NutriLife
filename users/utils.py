@@ -23,7 +23,12 @@ def adjust_macros(tdee, goal):
         return {'carbs': 0.5 * tdee, 'protein': 0.3 * tdee, 'fats': 0.2 * tdee}
     elif goal == 'gain_weight':
         return {'carbs': 0.6 * tdee, 'protein': 0.25 * tdee, 'fats': 0.15 * tdee}
+    elif goal == 'maintain_weight_lose':
+        return {'carbs': 0.55 * tdee, 'protein': 0.25 * tdee, 'fats': 0.2 * tdee}
+    elif goal == 'maintain_weight_gain':
+        return {'carbs': 0.6 * tdee, 'protein': 0.2 * tdee, 'fats': 0.2 * tdee}
     else:
+        # 기본값 (목표가 설정되지 않은 경우)
         return {'carbs': 0.6 * tdee, 'protein': 0.2 * tdee, 'fats': 0.2 * tdee}
 
 def generate_daily_meals(user_data, carbs_list, protein_list, fat_list):
