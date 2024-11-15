@@ -7,6 +7,7 @@ def calculate_bmr(user_data):
     else:
         return 10 * user_data['weight'] + 6.25 * user_data['height'] - 5 * user_data['age'] - 161
 
+
 def calculate_tdee(bmr, user_activity_data):
     activity_multiplier = calculate_activity_multiplier(
         user_activity_data['activity_level'],
@@ -52,36 +53,59 @@ def generate_daily_meals(user_data, carbs_list, protein_list, fat_list, meal_rat
 def generate_meal(carbs_list, protein_list, fat_list, macro_goals):
     return {
         'carbs': calculate_portions(
-            select_component(carbs_list, macro_goals['carbs'], 'carbs'),
+            select_component(carbs_list, macro_goals['carbs'], 'carbs', max_items=1),
             macro_goals['carbs'], 'carbs'
         ),
         'protein': calculate_portions(
-            select_component(protein_list, macro_goals['protein'], 'protein'),
+            select_component(protein_list, macro_goals['protein'], 'protein', max_items=1),
             macro_goals['protein'], 'protein'
         ),
         'fats': calculate_portions(
-            select_component(fat_list, macro_goals['fats'], 'fat'),
+            select_component(fat_list, macro_goals['fats'], 'fat', max_items=1),
             macro_goals['fats'], 'fat'
         ),
     }
     
 def calculate_portions(selected_items, macro_goal, macro_key):
-    total_macro = sum(item[macro_key] for item in selected_items) 
     portioned_items = []
+    remaining_macro = macro_goal  # 목표 매크로 남은 양
+
     for item in selected_items:
-        ratio = macro_goal / total_macro if total_macro > 0 else 0
-        adjusted_amount = round(ratio * item[macro_key], 1)  
-        portioned_items.append({'name': item['name'], 'amount': adjusted_amount})
+        # 음식별 매크로 비율 계산
+        item_macro = item[macro_key] / item['serving_size']
+
+        # 음식별 섭취 가능량 계산 (남은 매크로를 기준으로)
+        max_servings = remaining_macro / item[macro_key] if item[macro_key] > 0 else 0
+        adjusted_amount = min(max_servings * item['serving_size'], item['serving_size'] * 2)  # 최대 2배 서빙 제한
+
+        # 섭취량이 유효할 경우 추가
+        if adjusted_amount > 0:
+            portioned_items.append({'name': item['name'], 'amount': round(adjusted_amount, 1)})
+            remaining_macro -= adjusted_amount * item_macro  # 남은 매크로 양 업데이트
+
+        # 목표치 달성 시 중단
+        if remaining_macro <= 0:
+            break
+
     return portioned_items
 
-def select_component(source_list, macro_goal, macro_key):
+def select_component(source_list, macro_goal, macro_key, max_items=1):
+
+    random.shuffle(source_list)
     selected = []
     total_macro = 0  
+
     for item in source_list:
-        if total_macro >= macro_goal:
-            break  # 목표치를 초과하면 중단
+        if len(selected) >= max_items:  # 최대 음식 개수 제한
+            break
+        if total_macro + item[macro_key] > macro_goal:  # 목표치를 초과하면 중단
+            continue
         selected.append(item)
-        total_macro += item[macro_key]  
+        total_macro += item[macro_key]
+
+        if total_macro >= macro_goal:  # 목표치에 도달하면 루프 종료
+            break
+        
     return selected
 
 def meets_macro_goal(selected, macro_goal, tolerance=0.1):

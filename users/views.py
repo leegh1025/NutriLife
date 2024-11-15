@@ -209,19 +209,25 @@ def user_info_complete(request):
 
 
     carbs_list = [
-        {'name': '쌀밥', 'carbs': 40, 'protein': 3, 'fat': 0.5},
-        {'name': '고구마', 'carbs': 27, 'protein': 2, 'fat': 0.1},
-        {'name': '통밀 파스타', 'carbs': 30, 'protein': 5, 'fat': 1.2},
+        {'name': '쌀밥', 'carbs': 40, 'protein': 3, 'fat': 0.5, 'serving_size': 100},
+        {'name': '고구마', 'carbs': 27, 'protein': 2, 'fat': 0.1, 'serving_size': 100},
+        {'name': '통밀 파스타', 'carbs': 30, 'protein': 5, 'fat': 1.2, 'serving_size': 100},
+        {'name': '빵', 'carbs': 25, 'protein': 6, 'fat': 1.5, 'serving_size': 50}, 
+        {'name': '옥수수', 'carbs': 29, 'protein': 3, 'fat': 1.0, 'serving_size': 100},  
+        {'name': '바나나', 'carbs': 27, 'protein': 1, 'fat': 0.3, 'serving_size': 100}
     ]
     protein_list = [
-        {'name': '닭가슴살', 'carbs': 0, 'protein': 25, 'fat': 1.5},
-        {'name': '계란', 'carbs': 1, 'protein': 6, 'fat': 5},
-        {'name': '두부', 'carbs': 3, 'protein': 8, 'fat': 4},
+        {'name': '닭가슴살', 'carbs': 0, 'protein': 25, 'fat': 1.5, 'serving_size': 100},
+        {'name': '계란', 'carbs': 1, 'protein': 6, 'fat': 5, 'serving_size': 50},
+        {'name': '두부', 'carbs': 3, 'protein': 8, 'fat': 4, 'serving_size': 100},
+        {'name': '연어', 'carbs': 0, 'protein': 20, 'fat': 10, 'serving_size': 100}, 
+        {'name': '소고기', 'carbs': 0, 'protein': 26, 'fat': 9, 'serving_size': 100},   
     ]
     fat_list = [
-        {'name': '아몬드', 'carbs': 6, 'protein': 6, 'fat': 14},
-        {'name': '아보카도', 'carbs': 9, 'protein': 2, 'fat': 15},
-        {'name': '땅콩버터', 'carbs': 6, 'protein': 8, 'fat': 16},
+        {'name': '아몬드', 'carbs': 6, 'protein': 6, 'fat': 14, 'serving_size': 28},
+        {'name': '아보카도', 'carbs': 9, 'protein': 2, 'fat': 15, 'serving_size': 75},
+        {'name': '땅콩버터', 'carbs': 6, 'protein': 8, 'fat': 16, 'serving_size': 32},
+        {'name': '치즈', 'carbs': 1, 'protein': 6, 'fat': 9, 'serving_size': 30}
     ]
 
     # 식단 생성
