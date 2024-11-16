@@ -1,0 +1,149 @@
+/* 공통 스타일 */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #1e1e1e;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+header.header-section {
+    text-align: center;
+    padding: 20px 0;
+    background: linear-gradient(135deg, #1d8637, #80ed99); 
+    color: white;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+    font-weight: 700;
+}
+
+header p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    font-weight: 300;
+}
+
+/* 에너지 통계 */
+.energy-stats {
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    margin: 20px auto;
+    text-align: center;
+    width: 90%; 
+    max-width: 1200px; 
+    box-sizing: border-box;
+}
+
+.energy-stats h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #80ed99;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    width: 45%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.stat-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #85f69f;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* 매크로 목표 */
+.macro-goals {
+    margin-top: 40px;
+    padding: 20px;
+    background: #212529;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.macro-goals h3 {
+    font-size: 1.8rem;
+    color: #85f69f;
+    margin-bottom: 15px;
+}
+
+.macro-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.macro-item {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    width: 30%;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 식단 섹션 */
+.meal-section {
+    margin: 0 auto; 
+    padding: 0 40px; 
+    max-width: 1200px; 
+    box-sizing: border-box; 
+}
+
+.meal-section h2 {
+    text-align: center;
+    color: #80ed99;
+    margin: 40px 0 20px;
+}
+
+.meal-container {
+    background: rgba(0, 0, 0, 0.5);
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.meal-container h3 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: #85f69f;
+}
+
+.meal-tray {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.tray {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.tray h4 {
+    font-size: 1.2rem;
+    color: #85f69f;
+    margin-bottom: 10px;
+}
