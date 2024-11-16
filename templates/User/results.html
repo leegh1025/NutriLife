@@ -1,9 +1,12 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>맞춤 식단 결과</title>
+    <link rel="stylesheet" href="{% static 'css/result.css' %}">  
 </head>
 <body>
     <header>
@@ -17,7 +20,7 @@
         </section>
 
         <section>
-            <h3>매크로 목표</h3>
+            <h3>일일 섭취 목표</h3>
             <ul>
                 <li>탄수화물: {{ daily_macros.carbs|floatformat:1 }} kcal</li>
                 <li>단백질: {{ daily_macros.protein|floatformat:1 }} kcal</li>
