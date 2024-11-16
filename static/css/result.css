@@ -102,3 +102,101 @@ footer {
     color: #808080;
     font-size: 0.8rem;
 }
+
+
+.meal-divider {
+    margin: 20px 0;
+    border-top: 2px dashed #85f69f; 
+}
+
+
+/* .meal-section {
+    padding: 15px;
+    margin-bottom: 20px;
+    background: rgba(0, 0, 0, 0.4); 
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
+} */
+
+/* 식사 블록 스타일 */
+.meal-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.meal-section h3 {
+    font-size: 1.8rem;
+    color: #80ed99;
+    margin-bottom: 20px;
+}
+
+
+.meal-tray {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 20px;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.tray-section {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.tray-section h4 {
+    font-size: 1.2rem;
+    color: #85f69f;
+    margin-bottom: 10px;
+}
+
+
+.tray-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tray-section ul li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.tray-section ul li img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+
+.tray-section ul li span {
+    font-size: 1rem;
+    color: #dcdcdc;
+}
+
+
+@media (max-width: 768px) {
+    .meal-tray {
+        grid-template-columns: 1fr; 
+    }
+}

@@ -18,38 +18,86 @@
             <h2>기초대사량 (BMR): {{ bmr }} kcal</h2>
             <h2>총 일일 에너지 소비량 (TDEE): {{ tdee }} kcal</h2>
         </section>
-
+    
         <section>
-            <h3>일일 섭취 목표</h3>
+            <h3>매크로 목표</h3>
             <ul>
                 <li>탄수화물: {{ daily_macros.carbs|floatformat:1 }} kcal</li>
                 <li>단백질: {{ daily_macros.protein|floatformat:1 }} kcal</li>
                 <li>지방: {{ daily_macros.fats|floatformat:1 }} kcal</li>
             </ul>
         </section>
-
+    
+        <!-- <section>
+            <h2>식단</h2>
+            {% for meal in meals %}
+                <div class="meal-section"> 
+                    <h3>{{ meal.meal_time|capfirst }}</h3> 
+                    <p><strong>탄수화물:</strong></p>
+                    <ul>
+                        {% for carb in meal.meal.carbs %}
+                            <li>{{ carb.name }}: {{ carb.amount }}g</li>
+                        {% endfor %}
+                    </ul>
+                    <p><strong>단백질:</strong></p>
+                    <ul>
+                        {% for protein in meal.meal.protein %}
+                            <li>{{ protein.name }}: {{ protein.amount }}g</li>
+                        {% endfor %}
+                    </ul>
+                    <p><strong>지방:</strong></p>
+                    <ul>
+                        {% for fat in meal.meal.fats %}
+                            <li>{{ fat.name }}: {{ fat.amount }}g</li>
+                        {% endfor %}
+                    </ul>
+                </div> 
+                <div class="meal-divider"></div> 
+            {% endfor %}
+        </section> -->
         <section>
             <h2>식단</h2>
             {% for meal in meals %}
-                <h3>{{ meal.meal_time|capfirst }}</h3>
-                <p><strong>탄수화물:</strong></p>
-                <ul>
-                    {% for carb in meal.meal.carbs %}
-                        <li>{{ carb.name }}: {{ carb.amount }}g</li>
-                    {% endfor %}
-                </ul>
-                <p><strong>단백질:</strong></p>
-                <ul>
-                    {% for protein in meal.meal.protein %}
-                        <li>{{ protein.name }}: {{ protein.amount }}g</li>
-                    {% endfor %}
-                </ul>
-                <p><strong>지방:</strong></p>
-                <ul>
-                    {% for fat in meal.meal.fats %}
-                        <li>{{ fat.name }}: {{ fat.amount }}g</li>
-                    {% endfor %}
-                </ul>
+                <div class="meal-section"> <!-- 식사 블록 -->
+                    <h3>{{ meal.meal_time|capfirst }}</h3>
+                    <div class="meal-tray"> 
+                        <!-- 탄수화물 칸 -->
+                        <div class="tray-section carbs">
+                            <h4>탄수화물</h4>
+                            <ul>
+                                {% for carb in meal.meal.carbs %}
+                                    <li><img src="/static/images/{{ carb.name }}.png" alt="{{ carb.name }}">
+                                        <span>{{ carb.name }}: {{ carb.amount }}g</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+        
+                        <!-- 단백질 칸 -->
+                        <div class="tray-section protein">
+                            <h4>단백질</h4>
+                            <ul>
+                                {% for protein in meal.meal.protein %}
+                                    <li><img src="/static/images/{{ protein.name }}.png" alt="{{ protein.name }}">
+                                        <span>{{ protein.name }}: {{ protein.amount }}g</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+        
+                        <!-- 지방 칸 -->
+                        <div class="tray-section fats">
+                            <h4>지방</h4>
+                            <ul>
+                                {% for fat in meal.meal.fats %}
+                                    <li><img src="/static/images/{{ fat.name }}.png" alt="{{ fat.name }}">
+                                        <span>{{ fat.name }}: {{ fat.amount }}g</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
         </section>
     </main>
