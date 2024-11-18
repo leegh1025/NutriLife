@@ -100,6 +100,8 @@ def user_info_exercise(request):
                 return redirect('/user_info/exercise_intensity/')
             else:
                 # "아니요"를 선택했을 경우, 프로세스 종료
+                request.session['exercise_intensity'] = None
+                request.session['exercise_time'] = None
                 return save_user_info(request) 
     else:
         form = ExerciseInfoForm()
@@ -245,6 +247,7 @@ def user_info_complete(request):
 
 
 def save_user_info(request):
+    print("Session Data at save_user_info:", request.session.items())
     # 세션에서 필요한 데이터 가져오기
     goal = request.session.get('goal')
     meal_choices = request.session.get('meal_choices')
@@ -258,6 +261,8 @@ def save_user_info(request):
     sleep_duration = request.session.get('sleep_duration')
     lifestyle = request.session.get('lifestyle')
     exercise_regular = request.session.get('exercise_regular')
+    intensity = request.session.get('exercise_intensity', 'light')
+    duration = request.session.get('exercise_time', 'under_30')
     
     # UserInfo에 데이터 저장
     user_info = UserInfo.objects.create(
@@ -273,11 +278,14 @@ def save_user_info(request):
         sleep_duration=sleep_duration,
         lifestyle=lifestyle,
         exercise_regular=exercise_regular,
+        intensity=intensity,
+        time=duration,
     )
 
+    print("Saved User Info:", user_info)
     request.session.flush()  # 세션 정리
 
-    return JsonResponse({"message": "모든 정보가 성공적으로 저장되었습니다."})
+    return redirect('user_info_results')
 
 def user_info_results(request):
     # BMR, TDEE, daily_macros, meals 데이터 가져오기
@@ -286,6 +294,7 @@ def user_info_results(request):
     daily_macros = request.session.get('daily_macros')
     meals = request.session.get('meals')
 
+    print("Session Data at user_info_results:", request.session.items())
     # 데이터 렌더링
     return render(request, 'User/results.html', {
         'bmr': bmr,
