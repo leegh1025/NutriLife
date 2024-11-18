@@ -73,7 +73,7 @@
                         <div class="tray carbs">
                             <h4>탄수화물</h4>
                             <ul>
-                                {% for carb in meal.meal.carbs %}
+                                {% for carb in meal.meal.additional_carbs %}
                                     <li>{{ carb.name }}: {{ carb.amount }}g</li>
                                 {% endfor %}
                             </ul>
@@ -81,7 +81,7 @@
                         <div class="tray protein">
                             <h4>단백질</h4>
                             <ul>
-                                {% for protein in meal.meal.protein %}
+                                {% for protein in meal.meal.additional_protein %}
                                     <li>{{ protein.name }}: {{ protein.amount }}g</li>
                                 {% endfor %}
                             </ul>
@@ -89,9 +89,15 @@
                         <div class="tray fats">
                             <h4>지방</h4>
                             <ul>
-                                {% for fat in meal.meal.fats %}
+                                {% for fat in meal.meal.additional_fats %}
                                     <li>{{ fat.name }}: {{ fat.amount }}g</li>
                                 {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="tray ready-meal">
+                            <h4>완제품</h4>
+                            <ul>
+                                <li>{{ meal.meal.ready_meal.name }}: {{ meal.meal.ready_meal.amount }}g</li>
                             </ul>
                         </div>
                     </div>

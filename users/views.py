@@ -100,8 +100,8 @@ def user_info_exercise(request):
                 return redirect('/user_info/exercise_intensity/')
             else:
                 # "아니요"를 선택했을 경우, 프로세스 종료
-                request.session['exercise_intensity'] = None
-                request.session['exercise_time'] = None
+                request.session['exercise_intensity'] = "light"
+                request.session['exercise_time'] = "under_30"
                 return save_user_info(request) 
     else:
         form = ExerciseInfoForm()
@@ -140,7 +140,7 @@ def user_info_exercise_time(request):
     return render(request, 'User/user_info_exercise_time.html', {'form': form})
 
 def user_info_complete(request):
-    print("user_info_complete 뷰가 호출되었습니다.")
+    print("Session Data at user_info_complete:", dict(request.session.items()))
     # 세션에서 모든 데이터 가져오기
     goal = request.session.get('goal')
     meal_choices = request.session.get('meal_choices')
@@ -232,13 +232,25 @@ def user_info_complete(request):
         {'name': '치즈', 'carbs': 1, 'protein': 6, 'fat': 9, 'serving_size': 30}
     ]
 
+    ready_meal_list = [
+    {'name': '케이준 치킨 샐러드', 'carbs': 15, 'protein': 25, 'fat': 10, 'serving_size': 150},
+    {'name': '그릴드 치킨 랩', 'carbs': 30, 'protein': 20, 'fat': 15, 'serving_size': 200},
+    {'name': '훈제 연어 샐러드', 'carbs': 10, 'protein': 30, 'fat': 12, 'serving_size': 180},
+    {'name': '머쉬룸 크림 스프', 'carbs': 20, 'protein': 5, 'fat': 8, 'serving_size': 250},
+    {'name': '소고기 스테이크', 'carbs': 0, 'protein': 50, 'fat': 20, 'serving_size': 200},
+    ]
+
     # 식단 생성
-    meals = generate_daily_meals(user_data, carbs_list, protein_list, fat_list, meal_ratios)
+    meals = generate_daily_meals(user_data, carbs_list, protein_list, fat_list, ready_meal_list, meal_ratios)
 
     request.session['bmr'] = bmr
     request.session['tdee'] = tdee
     request.session['daily_macros'] = daily_macros
     request.session['meals'] = meals
+
+    print("Session Data at user_info_complete:", request.session.items())
+
+    request.session.modified = True
 
     return redirect('user_info_results')
 
@@ -283,7 +295,7 @@ def save_user_info(request):
     )
 
     print("Saved User Info:", user_info)
-    request.session.flush()  # 세션 정리
+    # 세션 정리
 
     return redirect('user_info_results')
 
@@ -295,6 +307,7 @@ def user_info_results(request):
     meals = request.session.get('meals')
 
     print("Session Data at user_info_results:", request.session.items())
+    
     # 데이터 렌더링
     return render(request, 'User/results.html', {
         'bmr': bmr,

@@ -30,7 +30,7 @@ def adjust_macros(tdee, goal):
         # 기본값 (목표가 설정되지 않은 경우)
         return {'carbs': 0.6 * tdee, 'protein': 0.2 * tdee, 'fats': 0.2 * tdee}
 
-def generate_daily_meals(user_data, carbs_list, protein_list, fat_list, meal_ratios):
+def generate_daily_meals(user_data, carbs_list, protein_list, fat_list, ready_meal_list, meal_ratios):
     bmr = calculate_bmr(user_data)
     tdee = calculate_tdee(bmr, user_data)
     daily_macros = adjust_macros(tdee, user_data['goal'])
@@ -46,24 +46,50 @@ def generate_daily_meals(user_data, carbs_list, protein_list, fat_list, meal_rat
         } 
         meals.append({
             'meal_time': meal_time,
-            'meal': generate_meal(carbs_list, protein_list, fat_list, macro_goals_per_meal)
+            'meal': generate_meal(carbs_list, protein_list, fat_list, macro_goals_per_meal, ready_meal_list)
         })
     return meals
 
-def generate_meal(carbs_list, protein_list, fat_list, macro_goals):
+def generate_meal(carbs_list, protein_list, fat_list, macro_goals, ready_meal_list):
+    ready_meal = random.choice(ready_meal_list)
+
+    ready_meal_macros = {
+        'carbs': ready_meal.get('carbs', 0),
+        'protein': ready_meal.get('protein', 0),
+        'fats': ready_meal.get('fats', 0)
+    }
+
+    remaining_macros = {
+        'carbs': max(macro_goals['carbs'] - ready_meal_macros['carbs'], 0),
+        'protein': max(macro_goals['protein'] - ready_meal_macros['protein'], 0),
+        'fats': max(macro_goals['fats'] - ready_meal_macros['fats'], 0)
+    }
+
+    # 부족한 매크로 보충
+    additional_carbs = calculate_portions(
+        select_component(carbs_list, remaining_macros['carbs'], 'carbs', max_items=2),
+        remaining_macros['carbs'], 'carbs'
+    )
+    additional_protein = calculate_portions(
+        select_component(protein_list, remaining_macros['protein'], 'protein', max_items=2),
+        remaining_macros['protein'], 'protein'
+    )
+    additional_fats = calculate_portions(
+        select_component(fat_list, remaining_macros['fats'], 'fat', max_items=2),
+        remaining_macros['fats'], 'fat'
+    )
+
+    # 결과 반환
     return {
-        'carbs': calculate_portions(
-            select_component(carbs_list, macro_goals['carbs'], 'carbs', max_items=1),
-            macro_goals['carbs'], 'carbs'
-        ),
-        'protein': calculate_portions(
-            select_component(protein_list, macro_goals['protein'], 'protein', max_items=1),
-            macro_goals['protein'], 'protein'
-        ),
-        'fats': calculate_portions(
-            select_component(fat_list, macro_goals['fats'], 'fat', max_items=1),
-            macro_goals['fats'], 'fat'
-        ),
+        'ready_meal': {'name': ready_meal['name'], 'amount': ready_meal['serving_size']},
+        'additional_carbs': additional_carbs,
+        'additional_protein': additional_protein,
+        'additional_fats': additional_fats,
+        'total_macros': {
+            'carbs': ready_meal_macros['carbs'] + sum(item['carbs'] for item in additional_carbs),
+            'protein': ready_meal_macros['protein'] + sum(item['protein'] for item in additional_protein),
+            'fats': ready_meal_macros['fats'] + sum(item['fat'] for item in additional_fats)
+        }
     }
     
 def calculate_portions(selected_items, macro_goal, macro_key):
@@ -141,7 +167,14 @@ def calculate_activity_multiplier(activity_level, exercise_regular, sleep_durati
             'intense': 0.4
         }
         intensity_factor = exercise_intensity_factors.get(exercise_regular['intensity'], 0.1)
-        duration_factor = exercise_regular['duration'] / 60.0
+        duration_mapping = {
+            "under_30": 0.5,  # 30분 이하 -> 0.5시간
+            "30_to_60": 1.0,  # 30~60분 -> 1시간
+            "60_to_90": 1.5,  # 60~90분 -> 1.5시간
+            "90_to_120": 2.0, # 90~120분 -> 2시간
+            "over_120": 2.5   # 120분 초과 -> 2.5시간
+        }
+        duration_factor = duration_mapping.get(exercise_regular.get('duration', 'under_30'), 0.5)
         exercise_multiplier = intensity_factor * duration_factor
 
     total_multiplier = base_multiplier + exercise_multiplier
