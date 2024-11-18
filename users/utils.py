@@ -65,6 +65,7 @@ def generate_meal(carbs_list, protein_list, fat_list, macro_goals, ready_meal_li
         'fats': max(macro_goals['fats'] - ready_meal_macros['fats'], 0)
     }
 
+
     # 부족한 매크로 보충
     additional_carbs = calculate_portions(
         select_component(carbs_list, remaining_macros['carbs'], 'carbs', max_items=2),
@@ -79,6 +80,11 @@ def generate_meal(carbs_list, protein_list, fat_list, macro_goals, ready_meal_li
         remaining_macros['fats'], 'fat'
     )
 
+    total_macros = {
+        'carbs': ready_meal_macros['carbs'] + sum(item['carbs'] for item in additional_carbs),
+        'protein': ready_meal_macros['protein'] + sum(item['protein'] for item in additional_protein),
+        'fats': ready_meal_macros['fats'] + sum(item['fat'] for item in additional_fats)
+    }
     # 결과 반환
     return {
         'ready_meal': {'name': ready_meal['name'], 'amount': ready_meal['serving_size']},
@@ -102,19 +108,22 @@ def calculate_portions(selected_items, macro_goal, macro_key):
 
         # 음식별 섭취 가능량 계산 (남은 매크로를 기준으로)
         max_servings = remaining_macro / item[macro_key] if item[macro_key] > 0 else 0
-        adjusted_amount = min(max_servings * item['serving_size'], item['serving_size'] * 2)  # 최대 2배 서빙 제한
+        adjusted_amount = min(max_servings * item['serving_size'], item['serving_size'] * 1.5)  # 최대 1.5배 서빙 제한
 
         # 섭취량이 유효할 경우 추가
         if adjusted_amount > 0:
-            portioned_items.append({'name': item['name'], 'amount': round(adjusted_amount, 1)})
+            portioned_items.append({
+                'name': item['name'],
+                'amount': round(adjusted_amount, 1),
+                macro_key: round(adjusted_amount * item_macro, 1)  # 매크로 키 추가
+            })
             remaining_macro -= adjusted_amount * item_macro  # 남은 매크로 양 업데이트
-
+        
         # 목표치 달성 시 중단
-        if remaining_macro <= 0:
+        if remaining_macro <= 0.1 * macro_goal:  # 목표의 10% 이하로 남으면 중단
             break
 
     return portioned_items
-
 def select_component(source_list, macro_goal, macro_key, max_items=1):
 
     random.shuffle(source_list)
