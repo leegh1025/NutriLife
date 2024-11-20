@@ -73,34 +73,53 @@
                 <div class="meal-container">
                     <h3>{{ meal.meal_time|capfirst }}</h3>
                     <div class="meal-tray">
+                        <!-- 완제품 -->
+                        <div class="tray ready-meal">
+                            <h4>완제품</h4>
+                            <ul>
+                                <li>
+                                    <img src="{% static meal.meal.ready_meal.image %}" alt="{{ meal.meal.ready_meal.name }}" class="meal-image">
+                                    <p>{{ meal.meal.ready_meal.name }}: {{ meal.meal.ready_meal.amount }}g</p>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- 탄수화물 -->
                         <div class="tray carbs">
                             <h4>탄수화물</h4>
                             <ul>
                                 {% for carb in meal.meal.additional_carbs %}
-                                    <li>{{ carb.name }}: {{ carb.amount }}g</li>
+                                    <li>
+                                        <img src="{% static carb.image %}" alt="{{ carb.name }}" class="meal-image">
+                                        <p>{{ carb.name }}: {{ carb.amount }}g</p>
+                                    </li>
                                 {% endfor %}
                             </ul>
                         </div>
+                        
+                        <!-- 단백질 -->
                         <div class="tray protein">
                             <h4>단백질</h4>
                             <ul>
                                 {% for protein in meal.meal.additional_protein %}
-                                    <li>{{ protein.name }}: {{ protein.amount }}g</li>
+                                    <li>
+                                        <img src="{% static protein.image %}" alt="{{ protein.name }}" class="meal-image">
+                                        <p>{{ protein.name }}: {{ protein.amount }}g</p>
+                                    </li>
                                 {% endfor %}
                             </ul>
                         </div>
+                        
+                        <!-- 지방 -->
                         <div class="tray fats">
                             <h4>지방</h4>
                             <ul>
                                 {% for fat in meal.meal.additional_fats %}
-                                    <li>{{ fat.name }}: {{ fat.amount }}g</li>
+                                    <li>
+                                        <img src="{% static fat.image %}" alt="{{ fat.name }}" class="meal-image">
+                                        <p>{{ fat.name }}: {{ fat.amount }}g</p>
+                                    </li>
                                 {% endfor %}
-                            </ul>
-                        </div>
-                        <div class="tray ready-meal">
-                            <h4>완제품</h4>
-                            <ul>
-                                <li>{{ meal.meal.ready_meal.name }}: {{ meal.meal.ready_meal.amount }}g</li>
                             </ul>
                         </div>
                     </div>

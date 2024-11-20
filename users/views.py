@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
+from .utils import image_map  
+from .utils import add_images_to_meals
 
 class SignupView(CreateView):
     template_name = 'User/signup.html'
@@ -250,22 +252,12 @@ def user_info_complete(request):
     {'name': '소고기 스테이크', 'carbs': 0, 'protein': 50, 'fat': 20, 'serving_size': 200},
     {'name': '그릴드 닭가슴살 플레이트', 'carbs': 10, 'protein': 40, 'fat': 8, 'serving_size': 200},
     {'name': '생선구이와 구운 채소', 'carbs': 15, 'protein': 35, 'fat': 7, 'serving_size': 200},
-    {'name': '아보카도 닭가슴살 샐러드', 'carbs': 12, 'protein': 30, 'fat': 15, 'serving_size': 180},
     {'name': '고구마 치킨 볼', 'carbs': 35, 'protein': 25, 'fat': 5, 'serving_size': 250},
     {'name': '단백질 팬케이크', 'carbs': 25, 'protein': 20, 'fat': 6, 'serving_size': 150},
-    {'name': '그릭 요거트와 견과류', 'carbs': 15, 'protein': 12, 'fat': 10, 'serving_size': 150},
     {'name': '오트밀과 블루베리', 'carbs': 30, 'protein': 10, 'fat': 5, 'serving_size': 200},
     {'name': '구운 연어와 퀴노아', 'carbs': 20, 'protein': 35, 'fat': 12, 'serving_size': 200},
-    {'name': '지중해식 샐러드', 'carbs': 18, 'protein': 25, 'fat': 12, 'serving_size': 180},
-    {'name': '닭가슴살 스테이크와 구운 아스파라거스', 'carbs': 10, 'protein': 40, 'fat': 5, 'serving_size': 200},
     {'name': '두부 스크램블과 아보카도 토스트', 'carbs': 25, 'protein': 15, 'fat': 10, 'serving_size': 200},
-    {'name': '단백질 쉐이크', 'carbs': 10, 'protein': 30, 'fat': 5, 'serving_size': 300},
-    {'name': '샐러드 랩', 'carbs': 20, 'protein': 20, 'fat': 10, 'serving_size': 200},
-    {'name': '채소 오믈렛', 'carbs': 5, 'protein': 25, 'fat': 10, 'serving_size': 150},
-    {'name': '통밀 파스타와 닭가슴살', 'carbs': 40, 'protein': 30, 'fat': 8, 'serving_size': 250},
     {'name': '저지방 치즈 오믈렛', 'carbs': 5, 'protein': 20, 'fat': 8, 'serving_size': 150},
-    {'name': '스모크드 치킨 샐러드', 'carbs': 15, 'protein': 28, 'fat': 10, 'serving_size': 180},
-    {'name': '렌틸콩 스튜', 'carbs': 30, 'protein': 20, 'fat': 5, 'serving_size': 250},
     {'name': '단호박 퓨레와 닭가슴살', 'carbs': 25, 'protein': 35, 'fat': 6, 'serving_size': 220},
     {'name': '칠리 치킨과 브로콜리', 'carbs': 20, 'protein': 30, 'fat': 8, 'serving_size': 200},
 ]
@@ -340,6 +332,8 @@ def user_info_results(request):
     daily_macros = request.session.get('daily_macros')
     meals = request.session.get('meals')
 
+    meals_with_images = add_images_to_meals(meals, image_map)
+
     # print("Session Data at user_info_results:", request.session.items())
     
     # 데이터 렌더링
@@ -347,7 +341,7 @@ def user_info_results(request):
         'bmr': bmr,
         'tdee': tdee,
         'daily_macros': daily_macros,
-        'meals': meals
+        'meals': meals_with_images,
     })
 
 def refresh_meals(request):
@@ -407,27 +401,17 @@ def refresh_meals(request):
         {'name': '소고기 스테이크', 'carbs': 0, 'protein': 50, 'fat': 20, 'serving_size': 200},
         {'name': '그릴드 닭가슴살 플레이트', 'carbs': 10, 'protein': 40, 'fat': 8, 'serving_size': 200},
         {'name': '생선구이와 구운 채소', 'carbs': 15, 'protein': 35, 'fat': 7, 'serving_size': 200},
-        {'name': '아보카도 닭가슴살 샐러드', 'carbs': 12, 'protein': 30, 'fat': 15, 'serving_size': 180},
         {'name': '고구마 치킨 볼', 'carbs': 35, 'protein': 25, 'fat': 5, 'serving_size': 250},
         {'name': '단백질 팬케이크', 'carbs': 25, 'protein': 20, 'fat': 6, 'serving_size': 150},
-        {'name': '그릭 요거트와 견과류', 'carbs': 15, 'protein': 12, 'fat': 10, 'serving_size': 150},
         {'name': '오트밀과 블루베리', 'carbs': 30, 'protein': 10, 'fat': 5, 'serving_size': 200},
         {'name': '구운 연어와 퀴노아', 'carbs': 20, 'protein': 35, 'fat': 12, 'serving_size': 200},
-        {'name': '지중해식 샐러드', 'carbs': 18, 'protein': 25, 'fat': 12, 'serving_size': 180},
-        {'name': '닭가슴살 스테이크와 구운 아스파라거스', 'carbs': 10, 'protein': 40, 'fat': 5, 'serving_size': 200},
         {'name': '두부 스크램블과 아보카도 토스트', 'carbs': 25, 'protein': 15, 'fat': 10, 'serving_size': 200},
-        {'name': '단백질 쉐이크', 'carbs': 10, 'protein': 30, 'fat': 5, 'serving_size': 300},
-        {'name': '샐러드 랩', 'carbs': 20, 'protein': 20, 'fat': 10, 'serving_size': 200},
-        {'name': '채소 오믈렛', 'carbs': 5, 'protein': 25, 'fat': 10, 'serving_size': 150},
-        {'name': '통밀 파스타와 닭가슴살', 'carbs': 40, 'protein': 30, 'fat': 8, 'serving_size': 250},
         {'name': '저지방 치즈 오믈렛', 'carbs': 5, 'protein': 20, 'fat': 8, 'serving_size': 150},
-        {'name': '스모크드 치킨 샐러드', 'carbs': 15, 'protein': 28, 'fat': 10, 'serving_size': 180},
-        {'name': '렌틸콩 스튜', 'carbs': 30, 'protein': 20, 'fat': 5, 'serving_size': 250},
         {'name': '단호박 퓨레와 닭가슴살', 'carbs': 25, 'protein': 35, 'fat': 6, 'serving_size': 220},
         {'name': '칠리 치킨과 브로콜리', 'carbs': 20, 'protein': 30, 'fat': 8, 'serving_size': 200},
     ]
 
-        # 새로운 식단 생성
+        
         meals = generate_daily_meals(
             user_data=user_data,
             carbs_list=carbs_list,

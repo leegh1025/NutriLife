@@ -68,8 +68,6 @@ def generate_meal(carbs_list, protein_list, fat_list, macro_goals, ready_meal_li
         'fats': max(macro_goals['fats'] - ready_meal_macros['fats'], 0)
     }
 
-
-
     additional_carbs = calculate_portions(
         select_component(carbs_list, remaining_macros['carbs'], 'carbs', max_items=2),
         min(remaining_macros['carbs'], remaining_calories / 4),  # 남은 칼로리도 고려
@@ -212,3 +210,64 @@ def calculate_activity_multiplier(activity_level, exercise_regular, sleep_durati
     total_multiplier = base_multiplier + exercise_multiplier
     total_multiplier *= sleep_factor
     return total_multiplier
+
+
+
+
+image_map = {
+    '케이준 치킨 샐러드': 'images/cajun.jpeg',
+    '그릴드 치킨 랩': 'images/chickenwrap.jpeg',
+    '훈제 연어 샐러드': 'images/salmon.jpeg',
+    '머쉬룸 크림 스프': 'images/mushroom.jpeg',
+    '소고기 스테이크': 'images/steak.jpeg',
+    '그릴드 닭가슴살 플레이트': 'images/chickenbreast.jpeg',
+    '생선구이와 구운 채소': 'images/fish.jpeg',
+    '고구마 치킨 볼': 'images/chickenball.jpeg',
+    '단백질 팬케이크': 'images/pancake.jpeg',
+    '오트밀과 블루베리': 'images/oatmeal.jpeg',
+    '구운 연어와 퀴노아': 'images/grilledsalmon.jpeg',
+    '두부 스크램블과 아보카도 토스트': 'images/tofuscramble.jpeg',
+    '저지방 치즈 오믈렛': 'images/omelette.jpeg',
+    '단호박 퓨레와 닭가슴살': 'images/pumpkinpuree.jpeg',
+    '칠리 치킨과 브로콜리': 'images/chillychicken.jpeg',
+    '고구마' : 'images/sweetpotato.png',
+    '통밀 파스타' : 'images/pasta.png',
+    '쌀밥' : 'images/rice.png',
+    '옥수수' : 'images/corn.png',
+    '바나나' : 'images/banana.png',
+    '빵' : 'images/bread.png',
+    '닭가슴살' : 'images/chick.png',
+    '계란' : 'images/egg.png',
+    '두부' : 'images/tofu.png',
+    '치즈' : 'images/cheese.png',
+    '땅콩버터' : 'images/peanutbutter.png',
+    '아보카도' : 'images/avocado.png',
+    '아몬드' : 'images/almond.png',
+
+}
+
+def add_images_to_meals(meals, image_map):
+    for meal in meals:
+        # ready_meal에 해당하는 이미지 추가
+        ready_meal_name = meal['meal']['ready_meal']['name']
+        if ready_meal_name in image_map:
+            meal['meal']['ready_meal']['image'] = image_map[ready_meal_name]  # 이미지가 없는 경우 기본 이미지
+
+        # 탄수화물 항목에 이미지 추가
+        for carb in meal['meal']['additional_carbs']:
+            if carb['name'] in image_map:
+                carb['image'] = image_map[carb['name']]
+        
+
+        # 단백질 항목에 이미지 추가
+        for protein in meal['meal']['additional_protein']:
+            if protein['name'] in image_map:
+                protein['image'] = image_map[protein['name']]
+        
+
+        # 지방 항목에 이미지 추가
+        for fat in meal['meal']['additional_fats']:
+            if fat['name'] in image_map:
+                fat['image'] = image_map[fat['name']]
+    return meals
+
