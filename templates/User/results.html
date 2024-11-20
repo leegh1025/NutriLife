@@ -61,6 +61,9 @@
                     </div>
                 </div>
             </div>
+            <div class="refresh-button-container">
+                <button id="refresh-meal-btn">새로고침</button>
+            </div>
         </section>
 
         <!-- 식단 섹션 -->
@@ -105,5 +108,24 @@
             {% endfor %}
         </section>
     </main>
+    <script>
+        document.getElementById("refresh-meal-btn").addEventListener("click", function () {
+            fetch("/user_info/refresh_meals/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 페이지를 다시 로드하여 업데이트된 결과 표시
+                    location.reload();
+                } else {
+                    alert("식단 새로고침에 실패했습니다. 다시 시도해주세요.");
+                }
+            });
+        });
+    </script>
 </body>
 </html>
