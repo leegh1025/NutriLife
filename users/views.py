@@ -3,6 +3,15 @@ from django.http import JsonResponse
 from .forms import GoalForm, MealChoiceForm, BasicInfoForm, AdditionalInfoForm, SleepDurationForm, LifestyleForm, ExerciseInfoForm, ExerciseIntensityForm, ExerciseTimeForm
 from .models import UserInfo
 from .utils import calculate_bmr, calculate_tdee, adjust_macros, generate_daily_meals
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
+
+class SignupView(CreateView):
+    template_name = 'User/signup.html'
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
 
 def user_info_goal(request):
     if request.method == "POST":
@@ -140,6 +149,7 @@ def user_info_exercise_time(request):
     
     return render(request, 'User/user_info_exercise_time.html', {'form': form})
 
+@login_required
 def user_info_complete(request):
     # 세션에서 모든 데이터 가져오기
     goal = request.session.get('goal')
@@ -279,7 +289,7 @@ def user_info_complete(request):
 
 
 
-
+@login_required
 def save_user_info(request):
     print("Session Data at save_user_info:", request.session.items())
     # 세션에서 필요한 데이터 가져오기
@@ -300,6 +310,7 @@ def save_user_info(request):
     
     # UserInfo에 데이터 저장
     user_info = UserInfo.objects.create(
+        user=request.user,
         goal=goal,
         meal_choices=" ".join(meal_choices) if meal_choices else None,
         birth_year=birth_year,
@@ -321,6 +332,7 @@ def save_user_info(request):
 
     return redirect('user_info_results')
 
+@login_required
 def user_info_results(request):
     # BMR, TDEE, daily_macros, meals 데이터 가져오기
     bmr = request.session.get('bmr')

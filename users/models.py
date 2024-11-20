@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class UserInfo(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     goal = models.CharField(max_length=20) # 목표
     meal_choices = models.CharField(max_length = 50) # 추천받고 싶은 끼니 선택(아,점,저), 중복 가능
     birth_year = models.IntegerField()

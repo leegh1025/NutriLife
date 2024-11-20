@@ -1,12 +1,14 @@
 from django.urls import path
 from . import views
-
-
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.views import LoginView, LogoutView
+from .views import SignupView
 
 urlpatterns = [
-    path('', views.user_info_goal, name='user_info_goal'),
+    path('', LoginView.as_view(template_name='User/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(next_page='/'), name='logout'),
+    path('signup/', SignupView.as_view(), name='signup'),
     path('user_info/goal/', views.user_info_goal, name='user_info_goal'),
     path('user_info/count/', views.user_info_count, name='user_info_count'),
     path('user_info/basic/', views.user_info_basic, name='user_info_basic'),
