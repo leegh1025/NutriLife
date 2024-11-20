@@ -141,7 +141,6 @@ def user_info_exercise_time(request):
     return render(request, 'User/user_info_exercise_time.html', {'form': form})
 
 def user_info_complete(request):
-    print("Session Data at user_info_complete:", dict(request.session.items()))
     # 세션에서 모든 데이터 가져오기
     goal = request.session.get('goal')
     meal_choices = request.session.get('meal_choices')
@@ -270,16 +269,8 @@ def user_info_complete(request):
     request.session['meals'] = meals
 
         # BMR 계산 확인
-    print(f"Calculated BMR: {bmr}")
-    # TDEE 계산 확인
-    print(f"Calculated TDEE: {tdee}")
-    # Daily Macros 계산 확인
-    print(f"Calculated Daily Macros: {daily_macros}")
-    # Meals 생성 확인
-    print(f"Generated Meals: {meals}")
 
 
-    print("Session Data at user_info_complete:", request.session.items())
 
     request.session.modified = True
 
@@ -331,7 +322,6 @@ def save_user_info(request):
     return redirect('user_info_results')
 
 def user_info_results(request):
-    print("Session Data at user_info_results:", dict(request.session.items()))
     # BMR, TDEE, daily_macros, meals 데이터 가져오기
     bmr = request.session.get('bmr')
     tdee = request.session.get('tdee')
@@ -339,8 +329,6 @@ def user_info_results(request):
     meals = request.session.get('meals')
 
     # print("Session Data at user_info_results:", request.session.items())
-    print(f"BMR: {bmr}, TDEE: {tdee}, Daily Macros: {daily_macros}")
-    print(f"Meals: {meals}")
     
     # 데이터 렌더링
     return render(request, 'User/results.html', {

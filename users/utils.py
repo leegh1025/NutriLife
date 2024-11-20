@@ -44,14 +44,16 @@ def generate_daily_meals(user_data, carbs_list, protein_list, fat_list, ready_me
             'protein': daily_macros['protein'] * ratio,
             'fats': daily_macros['fats'] * ratio
         } 
+        max_meal_calories = tdee * ratio
         meals.append({
             'meal_time': meal_time,
-            'meal': generate_meal(carbs_list, protein_list, fat_list, macro_goals_per_meal, ready_meal_list)
+            'meal': generate_meal(carbs_list, protein_list, fat_list, macro_goals_per_meal, ready_meal_list,max_meal_calories)
         })
     return meals
 
-def generate_meal(carbs_list, protein_list, fat_list, macro_goals, ready_meal_list):
+def generate_meal(carbs_list, protein_list, fat_list, macro_goals, ready_meal_list, max_meal_calories):
     ready_meal = random.choice(ready_meal_list)
+    ready_meal_calories = (ready_meal['carbs'] * 4) + (ready_meal['protein'] * 4) + (ready_meal['fat'] * 9)
 
     ready_meal_macros = {
         'carbs': ready_meal.get('carbs', 0),
@@ -59,6 +61,7 @@ def generate_meal(carbs_list, protein_list, fat_list, macro_goals, ready_meal_li
         'fats': ready_meal.get('fats', 0)
     }
 
+    remaining_calories = max(max_meal_calories - ready_meal_calories, 0)
     remaining_macros = {
         'carbs': max(macro_goals['carbs'] - ready_meal_macros['carbs'], 0),
         'protein': max(macro_goals['protein'] - ready_meal_macros['protein'], 0),
@@ -66,26 +69,45 @@ def generate_meal(carbs_list, protein_list, fat_list, macro_goals, ready_meal_li
     }
 
 
-    # 부족한 매크로 보충
+
     additional_carbs = calculate_portions(
         select_component(carbs_list, remaining_macros['carbs'], 'carbs', max_items=2),
-        remaining_macros['carbs'], 'carbs'
+        min(remaining_macros['carbs'], remaining_calories / 4),  # 남은 칼로리도 고려
+        'carbs'
     )
+    remaining_calories -= sum(item['carbs'] * 4 for item in additional_carbs)
+
     additional_protein = calculate_portions(
         select_component(protein_list, remaining_macros['protein'], 'protein', max_items=2),
-        remaining_macros['protein'], 'protein'
+        min(remaining_macros['protein'], remaining_calories / 4),  # 남은 칼로리도 고려
+        'protein'
     )
+    remaining_calories -= sum(item['protein'] * 4 for item in additional_protein)
+
     additional_fats = calculate_portions(
         select_component(fat_list, remaining_macros['fats'], 'fat', max_items=2),
-        remaining_macros['fats'], 'fat'
+        min(remaining_macros['fats'], remaining_calories / 9),  # 남은 칼로리도 고려
+        'fat'
     )
+    remaining_calories -= sum(item['fat'] * 9 for item in additional_fats)
+
 
     total_macros = {
         'carbs': ready_meal_macros['carbs'] + sum(item['carbs'] for item in additional_carbs),
         'protein': ready_meal_macros['protein'] + sum(item['protein'] for item in additional_protein),
         'fats': ready_meal_macros['fats'] + sum(item['fat'] for item in additional_fats)
     }
+
+    total_calories = ready_meal_calories + (
+        sum(item['carbs'] * 4 for item in additional_carbs) +
+        sum(item['protein'] * 4 for item in additional_protein) +
+        sum(item['fat'] * 9 for item in additional_fats)
+    )
     # 결과 반환
+    print("=== Final Debug Info ===")
+    print(f"Total Macros: {total_macros}")
+    print(f"Total Calories: {total_calories}")
+
     return {
         'ready_meal': {'name': ready_meal['name'], 'amount': ready_meal['serving_size']},
         'additional_carbs': additional_carbs,
@@ -95,10 +117,11 @@ def generate_meal(carbs_list, protein_list, fat_list, macro_goals, ready_meal_li
             'carbs': ready_meal_macros['carbs'] + sum(item['carbs'] for item in additional_carbs),
             'protein': ready_meal_macros['protein'] + sum(item['protein'] for item in additional_protein),
             'fats': ready_meal_macros['fats'] + sum(item['fat'] for item in additional_fats)
-        }
+        },
+        'total_calories': total_calories
     }
     
-def calculate_portions(selected_items, macro_goal, macro_key):
+def calculate_portions(selected_items, macro_goal, macro_key, min_amount=5):
     portioned_items = []
     remaining_macro = macro_goal  # 목표 매크로 남은 양
 
@@ -111,13 +134,13 @@ def calculate_portions(selected_items, macro_goal, macro_key):
         adjusted_amount = min(max_servings * item['serving_size'], item['serving_size'] * 1.5)  # 최대 1.5배 서빙 제한
 
         # 섭취량이 유효할 경우 추가
-        if adjusted_amount > 0:
+        if adjusted_amount >= min_amount:  # 최소량 조건 추가
             portioned_items.append({
                 'name': item['name'],
                 'amount': round(adjusted_amount, 1),
                 macro_key: round(adjusted_amount * item_macro, 1)  # 매크로 키 추가
             })
-            remaining_macro -= adjusted_amount * item_macro  # 남은 매크로 양 업데이트
+            remaining_macro -= adjusted_amount * item_macro   # 남은 매크로 양 업데이트
         
         # 목표치 달성 시 중단
         if remaining_macro <= 0.1 * macro_goal:  # 목표의 10% 이하로 남으면 중단
